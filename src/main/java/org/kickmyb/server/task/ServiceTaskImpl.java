@@ -87,14 +87,15 @@ public class ServiceTaskImpl implements ServiceTask {
         // valider que c'est non vide
         MTask task = repo.findById(req.id).get();
         user.tasks.remove(task);
-        MPhoto photo = task.photo;
 
-        task.photo = null;
-        photo.task = null;
+        if (task.photo != null) {
+            MPhoto photo = task.photo;
+            task.photo = null;
+            photo.task = null;
+            repoPics.save(photo);
+            repoPics.delete(photo);
+        }
 
-        repoPics.save(photo);
-
-        repoPics.delete(photo);
         repo.delete(task);
     }
 
